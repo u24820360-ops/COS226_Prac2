@@ -7,7 +7,7 @@ public class FilterLock implements Lock
 
     public FilterLock(int n) 
     {
-
+        
     }
 
     @Override
