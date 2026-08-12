@@ -19,7 +19,7 @@ public class FilterLock implements Lock
     @Override
     public void lock(int threadId) 
     {
-        for (int L = 1; L < this.n - 1; L++) {          //n threads require n - 1 levels because one thread must enter the critical section.
+        for (int L = 1; L < this.n; L++) {          //n threads require n - 1 levels because one thread must enter the critical section.
             this.level[threadId].value = L;             //thread with ID, threadId enters level L
             this.victim[L].value = threadId;            //thread with ID, threadId announces itself as the victim
             while (ahead(threadId) && this.victim[L].value == threadId) {

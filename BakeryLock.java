@@ -2,9 +2,9 @@
 public class BakeryLock implements Lock 
 {
 
-    private final int n;
-    private final VolatileBoolean[] flag;
-    private final VolatileInt[] label;
+    private final int n;                            // The number of competing threads
+    private final VolatileBoolean[] flag;           // Indicates if a thread is interested in acquiring the lock
+    private final VolatileInt[] label;              // The "ticket number" of the thread. Threads with lower tickets get served first
 
     public BakeryLock(int n) 
     {
@@ -22,7 +22,7 @@ public class BakeryLock implements Lock
     @Override
     public void lock(int threadId) 
     {
-        this.flag[threadId]=new VolatileBoolean(true); // i am interested in acquiring lock
+        this.flag[threadId].value = true; // i am interested in acquiring lock
 
         //find max value in the array and add 1 for new threads
         int MAXIMUM=0;
@@ -61,8 +61,12 @@ public class BakeryLock implements Lock
         int myLabel=this.label[threadId].value;
 
         for(int i = 0; i < this.n; i++) {
-            if(i != threadId && this.label[i].value < myLabel) {
-                return true;
+            // We must ONLY consider threads that are currently interested
+            if(i != threadId && this.flag[i].value == true) {
+                // Another thread precedes me if it has a lower label, OR the same label but a lower thread ID
+                if (this.label[i].value < myLabel || (this.label[i].value == myLabel && i < threadId)) {
+                    return true;
+                }
             }
         }
 
