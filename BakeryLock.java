@@ -22,7 +22,7 @@ public class BakeryLock implements Lock
     @Override
     public void lock(int threadId) 
     {
-        this.flag[threadId]=new VolatileBoolean(true); // i am intrested in acquiring lock
+        this.flag[threadId]=new VolatileBoolean(true); // i am interested in acquiring lock
 
         //find max value in the array and add 1 for new threads
         int MAXIMUM=0;
